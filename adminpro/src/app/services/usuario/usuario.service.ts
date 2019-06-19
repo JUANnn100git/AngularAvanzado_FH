@@ -6,6 +6,7 @@ import { URL_SERVICIOS } from '../../config/config';
 import { map } from 'rxjs/operators';
 
 import Swal from 'sweetalert2';
+import { SubirArchivoService } from '../subir-archivo/subir-archivo.service';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +17,8 @@ export class UsuarioService {
   token: string;
 
   constructor( public http: HttpClient,
-               public router: Router ) {
+               public router: Router,
+               public _subirArchivoService: SubirArchivoService ) {
 
     this.cargarStorage();
     console.log('Servicio de Usuario listo');
@@ -95,7 +97,7 @@ export class UsuarioService {
 
   }
 
-  crearUsuario( usuario: Usuario) {
+  crearUsuario( usuario: Usuario ) {
 
     const url = URL_SERVICIOS + '/usuario';
 
@@ -110,6 +112,45 @@ export class UsuarioService {
                 return resp.usuario;
               })
             );
+
+  }
+
+  actualizarUsuario( usuario: Usuario ) {
+
+    let url = URL_SERVICIOS + '/usuario/' + usuario._id;
+    url += '?token=' + this.token;
+
+    return this.http.put( url, usuario )
+            .pipe(
+              map( (resp: any) => {
+                let usuarioDB: Usuario =  resp.usuarioGuardado;
+                this.guardarStorage( usuarioDB._id, this.token, usuarioDB );
+                Swal.fire(
+                  'Usuario actualizado',
+                  usuario.nombre,
+                  'success'
+                );
+                return true;
+              })
+            ); 
+
+  }
+
+  cambiarImagen( archivo: File, id: string ) {
+    
+    this._subirArchivoService.subirArchivo( archivo, 'usuarios', id )
+            .then( (resp: any) => {
+              this.usuario.img = resp.usuarioActualizado.img;
+              Swal.fire(
+                'Imagen actualizada',
+                this.usuario.nombre,
+                'success'
+              );
+              this.guardarStorage(id, this.token, this.usuario);
+            })
+            .catch( resp => {
+              console.log(resp);
+            });
 
   }
 
