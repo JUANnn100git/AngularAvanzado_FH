@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Usuario } from 'src/app/models/usuario.model';
 import { UsuarioService } from '../../services/usuario/usuario.service';
+import { ModalUploadService } from '../../components/modal-upload/modal-upload.service';
 
 import Swal from 'sweetalert2';
-import { Subscriber } from 'rxjs';
-import { ModalUploadService } from '../../components/modal-upload/modal-upload.service';
+
 
 @Component({
   selector: 'app-usuarios',
@@ -30,7 +30,7 @@ export class UsuariosComponent implements OnInit {
           .subscribe( resp => this.cargarUsuarios() );
   }
 
-  mostarModal( id: string) {
+  mostarModal( id: string ) {
     this._modalUploadService.mostrarModal('usuarios', id);
   }
   

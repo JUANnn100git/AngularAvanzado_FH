@@ -3,6 +3,9 @@ import { SubirArchivoService } from '../../services/subir-archivo/subir-archivo.
 import { ModalUploadService } from './modal-upload.service';
 
 import Swal from 'sweetalert2';
+import { UsuarioService } from '../../services/usuario/usuario.service';
+import { Usuario } from 'src/app/models/usuario.model';
+
 
 @Component({
   selector: 'app-modal-upload',
@@ -16,8 +19,9 @@ export class ModalUploadComponent implements OnInit {
 
   @ViewChild('txtFile') txtFile: ElementRef;
 
-  constructor( public _subirArchivoService: SubirArchivoService,
-               public _modalUploadService: ModalUploadService) {
+  constructor( public _subirArchivoService: SubirArchivoService ,
+               public _modalUploadService: ModalUploadService,
+               public _usuarioService: UsuarioService) {
   }
 
   ngOnInit() {
@@ -30,6 +34,7 @@ export class ModalUploadComponent implements OnInit {
     this._modalUploadService.ocultarModal();
     this.txtFile.nativeElement.value = null;
   }
+
   
   seleccionImagen( archivo: File ) {
 
@@ -62,9 +67,19 @@ export class ModalUploadComponent implements OnInit {
   subirImagen() {
 
     this._subirArchivoService.subirArchivo( this.imagenSubir, this._modalUploadService.tipo, this._modalUploadService.id )
-            .then( resp => {
-              // Emitir un mensaje para todos que la imagen ya se subio
+            .then( (resp: any) => {
+              // Emitir un mensaje para todos informando que la imagen ya se subio
               this._modalUploadService.notificacion.emit( resp );
+
+              if ( this._modalUploadService.tipo === 'usuarios' && this._modalUploadService.id === this._usuarioService.usuario._id ) {
+               
+                let usuarioDB: Usuario =  resp.usuarioActualizado;
+                this._usuarioService.usuario.img = usuarioDB.img + '?_=' + Date.now();
+                this._usuarioService.guardarStorage( usuarioDB._id, this._usuarioService.token, usuarioDB );
+                
+
+              }
+            
               this.cerrarModal();
             })
             .catch( resp => {
