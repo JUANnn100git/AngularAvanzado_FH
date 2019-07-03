@@ -24,6 +24,8 @@ export class SidebarComponent implements OnInit {
     this._modalUploadService.notificacion
           .subscribe( () => this.usuario = this._usuarioService.usuario );
 
+    this._sidebar.cargarMenu();
+
   }
 
 }

@@ -5,24 +5,23 @@ import { UsuarioService } from '../usuario/usuario.service';
 @Injectable({
   providedIn: 'root'
 })
-export class LoginGuardGuard implements CanActivate {
-
-  constructor( public _usuarioService: UsuarioService,
-               public router: Router ) {
-
-  }
+export class AdminGuard implements CanActivate {
   
+  constructor( public _usuarioService: UsuarioService,
+               public router: Router ) {}
+    
   canActivate() {
 
-    if ( this._usuarioService.estaLogueado() ) {
-      //console.log('PASO EL GUARD');
+    if ( this._usuarioService.usuario.role === 'ADMIN_ROLE' ) {
       return true;
     } else {
-      //console.log('BLOQUEADO POR EL GUARD');
+      console.log('Bloqueado por el ADMIN GUARD');
       this.router.navigate(['/login']);
+      this._usuarioService.logout();
       return false;
     }
 
+    
   }
   
 }

@@ -75,7 +75,7 @@ export class ModalUploadComponent implements OnInit {
                
                 let usuarioDB: Usuario =  resp.usuarioActualizado;
                 this._usuarioService.usuario.img = usuarioDB.img + '?_=' + Date.now();
-                this._usuarioService.guardarStorage( usuarioDB._id, this._usuarioService.token, usuarioDB );
+                this._usuarioService.guardarStorage( usuarioDB._id, this._usuarioService.token, usuarioDB, this._usuarioService.menu );
                 
 
               }
