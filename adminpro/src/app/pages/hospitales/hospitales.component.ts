@@ -30,8 +30,8 @@ export class HospitalesComponent implements OnInit {
           .subscribe( resp => this.cargarHospitales() );
   }
 
-  mostarModal( id: string ) {
-    this._modalUploadService.mostrarModal('hospitales', id);
+  actualizarimagen( hospital: Hospital ) {
+    this._modalUploadService.mostrarModal('hospitales', hospital._id);
   }
 
   cargarHospitales() {
@@ -42,8 +42,8 @@ export class HospitalesComponent implements OnInit {
           .subscribe( (resp: any) => {
             
             console.log(resp);
-            this.totalRegistros = resp.total;
-            this.hospitales = resp.hospitales;
+            this.totalRegistros = this._hospitalService.totalHospitales;
+            this.hospitales = resp;
             this.cargando = false;
           });
   }
@@ -51,38 +51,38 @@ export class HospitalesComponent implements OnInit {
   obtenerHospital( id: string ) {
       
     this._hospitalService.obtenerHospital( id )
-            .subscribe( resp => {
-              console.log('obtenerHospital', resp);
-            });
+          .subscribe( resp => {
+            console.log('obtenerHospital', resp);
+          });
 
   }
 
-  async alertCrearHospital() {
+  crearHospital( ) {
 
-    const {value: nombreHospital} = await Swal.fire({
-      title: 'Creando Hospital',
+    Swal.fire({
+      title: 'Crear Hospital',
+      type: 'info',
       input: 'text',
+      text: 'Ingrese el nombre del Hospital',
       inputPlaceholder: 'Ingrese el nombre del Hospital..',
       inputValue: '',
       showCancelButton: true,
-      inputValidator: (value) => {
-        if (!value) {
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'OK',
+      cancelButtonText: 'Cancelar',
+      inputValidator: (valor) => {
+        if (!valor || valor.length === 0) {
           return 'El nombre es obligatorio!';
         }
       }
-    });
-    
-    if (nombreHospital) {
-      this.crearHospital( nombreHospital );
-    }
-
-  }
-
-  crearHospital( nombre:	string ) {
-
-    this._hospitalService.crearHospital( nombre )
-    .subscribe( resp => {
-      this.cargarHospitales();
+    }).then( (nombre: any) => {
+        if (nombre.value) {
+          this._hospitalService.crearHospital( nombre.value )
+            .subscribe( resp => {
+              this.cargarHospitales();
+            });
+        }
     });
 
   }
@@ -103,11 +103,10 @@ export class HospitalesComponent implements OnInit {
       if (borrar.value) {
 
         this._hospitalService.borrarHospital( id )
-        .subscribe( (borrado: any) => {
-          console.log(borrado);
-          this.cargarHospitales();
-          
-        });
+              .subscribe( (borrado: any) => {
+                console.log(borrado);
+                this.cargarHospitales();
+              });
 
       }
 
@@ -117,16 +116,13 @@ export class HospitalesComponent implements OnInit {
 
   actualizarHospital(	hospital:	Hospital ) {
 
-    // this.hospital.nombre = hospital.nombre;
-
-    console.log(hospital.nombre);
-
-    // this._hospitalService.actualizarHospital( this.hospital ).subscribe();
-
+    this._hospitalService.actualizarHospital( hospital )
+          .subscribe( resp => console.log(resp) );
+          
   }
 
   cambiarDesde( valor: number ) {
-    let desde = this.desde + valor;
+    const desde = this.desde + valor;
     console.log(desde);
     if ( desde >= this.totalRegistros ) {
       return;
@@ -136,6 +132,24 @@ export class HospitalesComponent implements OnInit {
     }
     this.desde += valor;
     this.cargarHospitales();
+  }
+
+  buscarHospital( termino: string ) {
+
+    if ( termino.length <= 0 ) {
+      this.cargarHospitales();
+      return;
+    }
+
+    this.cargando = true;
+    
+    this._hospitalService.buscarHospital(termino)
+          .subscribe( (resp: any) => {
+            console.log(resp);
+            this.hospitales = resp;
+            this.cargando = false;
+          });
+    
   }
 
 }

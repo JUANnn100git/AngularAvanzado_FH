@@ -3,7 +3,7 @@
       <div class="card">
         <div class="card-body">
   
-           <input #input  type="text" class="form-control" placeholder="Buscar hospital...">
+           <input #input (keyup)="buscarHospital( input.value )" type="text" class="form-control" placeholder="Buscar hospital...">
   
         </div>
       </div>
@@ -26,8 +26,9 @@
     <div class="col-12">
       <div class="card">
         <div class="card-body">
+          
           <div class="text-right">
-              <button (click)="alertCrearHospital()" class="btn btn-primary rounded text-right"><i class="fa fa-plus"></i> Crear hospital</button>
+              <button (click)="crearHospital()" class="btn btn-primary rounded text-right"><i class="fa fa-plus"></i> Crear hospital</button>
           </div>
           
           <h3 class="card-title">Hospitales registrados (<small>{{ totalRegistros }}</small>)</h3>
@@ -44,10 +45,10 @@
             <tbody>
               <tr *ngFor="let hospital of hospitales">
                 <td class="w70">
-                      <img (click)="mostarModal( hospital._id )" [src]="hospital.img | imagen:'hospital'" class="img-50 img-circle pointer">
+                      <img (click)="actualizarimagen( hospital )" [src]="hospital.img | imagen:'hospital'" class="img-50 pointer">
                     </td>
                 <td>
-                  <input [ngModel]="hospital.nombre" name="nombre" type="text" class="form-control" required>
+                  <input [(ngModel)]="hospital.nombre" name="nombre" type="text" class="form-control" required>
                 </td>
                 <td>
                   <button (click)="actualizarHospital( hospital )" class="btn btn-primary">

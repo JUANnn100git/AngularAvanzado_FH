@@ -31,7 +31,7 @@ export class UsuarioService {
 
   cargarStorage() {
 
-    if ( localStorage.getItem('token') ){
+    if ( localStorage.getItem('token') ) {
       this.token = localStorage.getItem('token');
       this.usuario = JSON.parse(localStorage.getItem('usuario'));
     } else {
@@ -63,7 +63,7 @@ export class UsuarioService {
   }
 
   // Google
-  loginGoogle( token: string ){
+  loginGoogle( token: string ) {
 
     const url = URL_SERVICIOS + '/login/google';
 
@@ -79,7 +79,7 @@ export class UsuarioService {
 
   login( usuario: Usuario, recordar: boolean = false ) {
 
-    if (recordar){
+    if (recordar) {
       localStorage.setItem('email', usuario.email);
     } else {
       localStorage.removeItem('email');
@@ -124,8 +124,8 @@ export class UsuarioService {
             .pipe(
               map( (resp: any) => {
 
-                if ( usuario._id === this.usuario._id ){
-                  let usuarioDB: Usuario =  resp.usuarioGuardado;
+                if ( usuario._id === this.usuario._id ) {
+                  const usuarioDB: Usuario =  resp.usuarioGuardado;
                   this.guardarStorage( usuarioDB._id, this.token, usuarioDB );
                 }
               
@@ -161,7 +161,7 @@ export class UsuarioService {
 
   cargarUsuarios( desde: number = 0 ) {
 
-    let url = URL_SERVICIOS + '/usuario?desde=' + desde;
+    const url = URL_SERVICIOS + '/usuario?desde=' + desde;
 
     return this.http.get( url );
 
@@ -169,7 +169,7 @@ export class UsuarioService {
 
   buscarUsuario( termino: string) {
 
-    let url = URL_SERVICIOS + '/busqueda/coleccion/usuarios/' + termino;
+    const url = URL_SERVICIOS + '/busqueda/coleccion/usuarios/' + termino;
 
     return this.http.get( url )
         .pipe(
@@ -179,7 +179,7 @@ export class UsuarioService {
 
   borrarUsuario( id: string ) {
 
-    let url = URL_SERVICIOS + '/usuario/' + id + '?token=' + this.token;
+    const url = URL_SERVICIOS + '/usuario/' + id + '?token=' + this.token;
 
     return this.http.delete( url )
                 .pipe(

@@ -13,29 +13,40 @@ import Swal from 'sweetalert2';
 })
 export class HospitalService {
 
+  totalHospitales: number = 0;
+
   constructor( public http: HttpClient,
                public _usuarioService: UsuarioService) {
   }
 
   cargarHospitales( desde: number = 0 ) {
 
-    let url = URL_SERVICIOS + '/hospital?desde=' + desde;
+    const url = URL_SERVICIOS + '/hospital?desde=' + desde;
 
-    return this.http.get( url );
+    return this.http.get( url )
+                .pipe(
+                  map( (resp: any) => {
+                    this.totalHospitales = resp.total;
+                    return resp.hospitales;
+                  })
+                );
 
   }
 
   obtenerHospital( id: string ) {
 
-    let url = URL_SERVICIOS + '/hospital/' + id;
+    const url = URL_SERVICIOS + '/hospital/' + id;
 
-    return this.http.get( url );
+    return this.http.get( url )
+                 .pipe(
+                   map( (resp: any) => resp.hospital)
+                 );
 
   }
 
   borrarHospital(	id:	string ) {
 
-    let url = URL_SERVICIOS + '/hospital/' + id + '?token=' + this._usuarioService.token;
+    const url = URL_SERVICIOS + '/hospital/' + id + '?token=' + this._usuarioService.token;
 
     return this.http.delete( url )
                 .pipe(
@@ -55,15 +66,13 @@ export class HospitalService {
 
     const url = URL_SERVICIOS + '/hospital?token=' + this._usuarioService.token;
 
-    var hospital = new Hospital(nombre);
-    
 
-    return this.http.post( url, hospital )
+    return this.http.post( url, { nombre } )
             .pipe(
               map( (resp: any) => {
                 Swal.fire(
                   'Hospital creado',
-                  hospital.nombre,
+                  nombre,
                   'success'
                 );
                 return resp.hospital;
@@ -72,7 +81,17 @@ export class HospitalService {
   }
 
   buscarHospital(	termino:	string ) {
-  
+
+    const url = URL_SERVICIOS + '/busqueda/coleccion/hospitales/' + termino;
+
+    return this.http.get( url )
+                 .pipe(
+                   map( (resp: any) => {
+                    this.totalHospitales = resp.total;
+                    return resp.hospitales;
+                   })
+                 );
+    
   }
 
   actualizarHospital(	hospital:	Hospital ) {
@@ -89,7 +108,7 @@ export class HospitalService {
                   hospital.nombre,
                   'success'
                 );
-                return true;
+                return resp.hospital;
                 
               })
             ); 

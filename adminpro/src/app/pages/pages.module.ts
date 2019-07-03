@@ -5,7 +5,7 @@ import { PAGES_ROUTES } from './pages.routes';
 
 // Modulos
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from '../shared/shared.module';
 
 // ng2-charts
@@ -30,6 +30,7 @@ import { UsuariosComponent } from './usuarios/usuarios.component';
 import { HospitalesComponent } from './hospitales/hospitales.component';
 import { MedicosComponent } from './medicos/medicos.component';
 import { ModalUploadComponent } from '../components/modal-upload/modal-upload.component';
+import { MedicoComponent } from './medicos/medico.component';
 
 
 
@@ -49,7 +50,8 @@ import { ModalUploadComponent } from '../components/modal-upload/modal-upload.co
         UsuariosComponent,
         HospitalesComponent,
         MedicosComponent,
-        ModalUploadComponent
+        ModalUploadComponent,
+        MedicoComponent
     ],
     exports: [
         PagesComponent,
