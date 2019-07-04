@@ -34,11 +34,9 @@ import { MedicoComponent } from './medicos/medico.component';
 import { BusquedaComponent } from './busqueda/busqueda.component';
 
 
-
-
 @NgModule({
     declarations: [
-        PagesComponent,
+        // PagesComponent,
         DashboardComponent,
         ProgressComponent,
         Graficas1Component,
@@ -51,12 +49,12 @@ import { BusquedaComponent } from './busqueda/busqueda.component';
         UsuariosComponent,
         HospitalesComponent,
         MedicosComponent,
-        ModalUploadComponent,
+        // ModalUploadComponent,
         MedicoComponent,
         BusquedaComponent
     ],
     exports: [
-        PagesComponent,
+        // PagesComponent,
         DashboardComponent,
         ProgressComponent,
         Graficas1Component
